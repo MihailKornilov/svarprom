@@ -1,0 +1,32 @@
+AddDefaultCharset utf-8
+#rewrite rules
+RewriteEngine on
+Options +FollowSymLinks
+Options -Indexes
+#pages
+RewriteBase /
+RewriteRule ^$ index\.php?p=site&id=1
+RewriteRule ^page([0-9]{1,20})/?$ index\.php?p=site&id=$1
+RewriteRule ^(login|admin|galery)/?$ index\.php?p=$1
+RewriteRule ^admin/(changepass|textlogo|menutop|menuleft|galery)/?$ index\.php?p=admin&d=$1
+RewriteRule ^admin/page([0-9]{1,20})/edit/?$ index\.php?p=admin&d=pageedit&id=$1
+RewriteRule ^admin/galery/id([0-9]{1,20})/?$ index\.php?p=admin&d=galeryedit&id=$1
+
+#error redirecting
+ErrorDocument 403 /index.html
+ErrorDocument 404 /index.html
+ErrorDocument 500 /index.html
+#compressing
+<ifmodule mod_deflate.c="">
+<filesmatch .(js|css|jpg|png|gif|ico|jpeg)$="">
+SetOutputFilter DEFLATE
+</filesmatch>
+</ifmodule>
+#caching
+FileETag MTime Size
+<ifmodule mod_expires.c>
+<filesmatch ".(jpg|jpeg|gif|png|css|js|ico)$">
+ExpiresActive on
+ExpiresDefault "modification plus 1 year"
+</filesmatch>
+</ifmodule>
