@@ -4,8 +4,9 @@ define('DEBUG', 1);
 define('NAMES', 'utf8');
 define('DOMAIN', $_SERVER["SERVER_NAME"]);
 define('URL', 'http://'.DOMAIN);
-define('PATH', 'c:/www/svarprom');
-//define('PATH', '/home/httpd/vhosts/xn--80ad5ahefbd.xn--p1ai/httpdocs');
+//define('PATH', 'c:/www/svarprom');
+define('PATH', '/home/httpd/vhosts/xn--80ad5ahefbd.xn--p1ai/httpdocs');
+
 
 
 define('REGEXP_NUMERIC', '/^[0-9]{1,20}$/i');
