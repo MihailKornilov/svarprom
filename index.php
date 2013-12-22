@@ -1,6 +1,6 @@
 <?php
 require_once('config.php');
-include('view/main.php');
+require_once('view/main.php');
 
 if(!isset($_GET['p'])) {
     $_GET['p'] = 'site';

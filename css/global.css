@@ -93,6 +93,7 @@ BUTTON.busy{border:#aaa solid 1px;background-color:#ddd;color:#aaa;}
 #content_td{background:#eee url(/img/textureleft.jpg) repeat-y;vertical-align:top;width:100%}
 #content{padding:10px 30px;min-width:550px;background:transparent url(/img/textureright.jpg) repeat-y right;}
 
+.image_show{cursor:pointer}
 
 
 
@@ -125,7 +126,7 @@ BUTTON.busy{border:#aaa solid 1px;background-color:#ddd;color:#aaa;}
 
 #changepass{margin:10px 20px;font-size:13px}
 
-#mce_frame{display:none}
+#mce_frame{display:none;width:500px;height:300px}
 
 #admin_textlogo{margin:20px 30px}
 #logotext_edit{

@@ -59,7 +59,7 @@ function links_top() {
     return '<table cellpadding="0" cellspacing="0" class="buttons"><tr>'.($items ? $items : '<td><a></a></td>').'</tr></table>';
 }//end of links_top()
 
-function _center($menu_left = '', $content = '') {
+function _center($menu_left='', $content='') {
     global $html;
     $html .= '<table cellpadding="0" cellspacing="0">'.
         '<tr><td id="left_td">'.$menu_left.'</td>'.
@@ -67,7 +67,7 @@ function _center($menu_left = '', $content = '') {
     '</table>';
 }//end of _center()
 
-function _left($p = '', $id = 0) {
+function _left($p='', $id=0) {
     $q = query("SELECT
                     `id`,`name`
                 FROM `pages`
@@ -161,7 +161,7 @@ function show_galery($name) {
         $arr['big']->about = $r['about'] ? $r['about'] : $r['name'];
         $json[$r['catalog_id']][] = $arr['big'];
     }
-    return '<SCRIPT type="text/javascript">var imagesJson = '.json_encode($json).';</SCRIPT>'.
+    return '<SCRIPT type="text/javascript">imagesJson = '.json_encode($json).';</SCRIPT>'.
         '<div id="show_galery">'.
             '<h1>'.$name.'</h1>'.
             $spisok.

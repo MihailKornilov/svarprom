@@ -31,6 +31,18 @@ switch(@$_POST['p']) {
             query("DELETE FROM `pages` WHERE `id`=".intval($_POST['id']));
             $cookie = "deleted";
         } else {
+	        $reg = '/files\/images\/(.*?)"/';
+	        preg_match_all($reg ,$_POST['txt'], $res);
+	        if(count($res[1])) {
+		        foreach($res[1] as $name) {
+			        $sql = "SELECT `id`,`catalog_id` FROM `galery_images` WHERE `img` LIKE '%".$name."%'";
+			        if($r = mysql_fetch_assoc(query($sql)))
+				        $_POST['txt'] = preg_replace(
+					                        '/'.$name.'/',
+					                        $name.'" val="'.$r['catalog_id'].'_'.$r['id'].'" class="image_show',
+					                        $_POST['txt']);
+		        }
+	        }
             query("UPDATE `pages`
                    SET `name`='".htmlspecialchars($_POST['name'], ENT_QUOTES)."',
                        `txt`='".htmlspecialchars($_POST['txt'], ENT_QUOTES)."'

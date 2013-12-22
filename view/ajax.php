@@ -207,6 +207,33 @@ switch(@$_POST['p']) {
         $q = query("SELECT * FROM `galery_images` ORDER BY `id` DESC");
         $send['image'] = admin_image_unit(mysql_fetch_assoc($q));
         break;
+	case 'image_catalog_get':
+		if(!preg_match(REGEXP_NUMERIC, $_POST['catalog_id'])) break;
+		if(!preg_match(REGEXP_NUMERIC, $_POST['id'])) break;
+		$catalog_id = intval($_POST['catalog_id']);
+		$id = intval($_POST['id']);
+		$sql = "SELECT
+					`id`,
+		            `img`,
+		            IFNULL(`about`,'') AS `about`
+		        FROM `galery_images`
+		        WHERE `access`=1
+		          AND `catalog_id`=".$catalog_id."
+		        ORDER BY `sort`";
+		$send['arr'] = array();
+		$n = 0;
+		$q = query($sql);
+		while($r = mysql_fetch_assoc($q)) {
+			$arr = (array)json_decode($r['img']);
+			$arr['big'] = (array)$arr['big'];
+			$arr['big']['about'] = $r['about'];
+			$arr['big']['id'] = $r['id'];
+			$send['arr'][] = $arr['big'];
+			$n++;
+			if($r['id'] == $id)
+				$send['arr'][0]['num'] = $n;
+		}
+		break;
     case 'image_about_edit':
         if(!ADMIN) break;
         if(!preg_match(REGEXP_NUMERIC, @$_POST['id'])) break;
@@ -241,5 +268,6 @@ switch(@$_POST['p']) {
     default:
         $send['error'] = 1;
 }
+
 
 echo json_encode($send);
