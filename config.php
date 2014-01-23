@@ -3,6 +3,7 @@ define('TIME', microtime(true));
 define('DEBUG', 1);
 define('NAMES', 'utf8');
 define('DOMAIN', $_SERVER["SERVER_NAME"]);
+define('LOCAL', DOMAIN == 'svarprom');
 define('URL', 'http://'.DOMAIN);
 define('REGEXP_NUMERIC', '/^[0-9]{1,20}$/i');
 define('REGEXP_BOOL', '/^[0-1]$/');

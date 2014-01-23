@@ -1,7 +1,6 @@
 <?php
-function _header($title)
-{
-    global $html;
+function _header($title) {
+    global $html, $description, $keywords;
     $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'.
         '<HTML xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">'.
         '<HEAD>'.
@@ -10,18 +9,25 @@ function _header($title)
             (DEBUG == 1 ? '<SCRIPT type="text/javascript">var T = (new Date()).getTime();</SCRIPT>':'').
             '<SCRIPT type="text/javascript" src="/js/jquery-1.9.1.min.js"></SCRIPT>'.
             '<SCRIPT type="text/javascript">'.
-                'var DOMAIN = "'.DOMAIN.'";'.
-                'var URL = "'.URL.'";'.
-                'var VERSION = '.VERSION.';'.
+                'var DOMAIN="'.DOMAIN.'",'.
+	                'URL = "'.URL.'",'.
+                    'VERSION = '.VERSION.';'.
             '</SCRIPT>'.
             '<SCRIPT type="text/javascript" src="/js/global.js?'.VERSION.'"></SCRIPT>'.
             '<LINK href="/css/global.css?'.VERSION.'" rel="stylesheet" type="text/css">'.
             '<TITLE>'.$title.'</TITLE>'.
+	        '<meta name="description" content="'.$description.'" />'.
+	        '<meta http-equiv="description" content="'.$description.'" />'.
+			'<meta name="keywords" content="'.$keywords.'" />'.
+			'<meta http-equiv="keywords" content="'.$keywords.'" />'.
+	        '<meta name="Resource-type" content="document" />'.
+			'<meta name="document-state" content="dynamic" />'.
+			'<meta name="Robots" content="index,follow" />'.
         '</HEAD>'.
         '<BODY class="svarprom">'.
 
         '<DIV id="mainDiv">';
-}//end of _header()
+}//_header()
 
 function _logo() {
     global $html;
@@ -30,7 +36,7 @@ function _logo() {
                     '<td id="logoimg"></td>'.
                 '</tr>'.
              '</table>';
-}//end of _logo()
+}//_logo()
 
 function _menuTop() {
     global $html;
@@ -41,7 +47,7 @@ function _menuTop() {
             '</tr>'.
         '</table>'.
     '</div>';
-}//end of menuTop()
+}//menuTop()
 
 function links_top() {
     $q = query("SELECT
@@ -57,7 +63,7 @@ function links_top() {
         $items .= '<td><a href="http://'.DOMAIN.'/'.$pname.'">'.$r['name'].'</a></td>';
     }
     return '<table cellpadding="0" cellspacing="0" class="buttons"><tr>'.($items ? $items : '<td><a></a></td>').'</tr></table>';
-}//end of links_top()
+}//links_top()
 
 function _center($menu_left='', $content='') {
     global $html;
@@ -65,7 +71,7 @@ function _center($menu_left='', $content='') {
         '<tr><td id="left_td">'.$menu_left.'</td>'.
             '<td id="content_td"><div id="content">'.$content.'</div></td></tr>'.
     '</table>';
-}//end of _center()
+}//_center()
 
 function _left($p='', $id=0) {
     $q = query("SELECT
@@ -81,7 +87,7 @@ function _left($p='', $id=0) {
         $send .= '<a href="'.URL.'/page'.$r['id'].'"'.($r['id'] == $id ? 'class="active"' : '').'>'.$r['name'].'</a>';
     $send .= '</div>';
     return $send;
-}//end of _left()
+}//_left()
 
 function _footer() {
     global $html, $sqlQuery;
@@ -102,9 +108,15 @@ function _footer() {
             '<a id="logout">Выход</a> '.
         '</span>';
     } else $login = '<a href="http://'.DOMAIN.'/login" class="admin_login">Вход</a>';
-    $html .= '<div id="footer"><span>сварпром.рф 2013</span> <span id="livecounter"></span>'.$login.$time.'</div>'.
-        '</div></BODY></HTML>';
-}//end of _footer()
+    $html .=
+		'<div id="footer">'.
+			'<span>сварпром.рф 2013</span> '.
+		    '<span id="livecounter"></span>'.
+			$login.
+			$time.
+		'</div>'.
+    '</div></BODY></HTML>';
+}//_footer()
 
 function show_login() {
     $send = '<div class="login_head">Вход на сайт</div>'.
@@ -112,22 +124,30 @@ function show_login() {
         '<button id="login">Войти</button> '.
         '<span class="error"></span>';
     return $send;
-}//end of show_login()
+}//show_login()
 
 function show_page($id) {
-    global $title;
+    global $title, $description, $keywords;
     $q = query("SELECT * FROM `pages` WHERE `id`=".$id);
     $r = mysql_fetch_assoc($q);
-    if(!$r || !ADMIN && $r['access'] == 0)
-        return 'Такой страницы нет';
+    if(!$r || !ADMIN && !$r['access'])
+        return 'Такой страницы нет.';
     $title = $r['name'];
-    if($r['galery'] == 1)
+    if($r['galery'])
         return show_galery($r['name']);
+	$txt = htmlspecialchars_decode($r['txt']);
+	$strip = strip_tags(nl2br($txt));
+	$strip = str_replace('&nbsp;', ' ', $strip);
+	$strip = str_replace("\n", ' ', $strip);
+	$strip = str_replace("\r", ' ', $strip);
+	$strip = str_replace('"', '', $strip);
+	$ex = explode('.', $strip);
+	$description = preg_replace ('/\s+/', ' ', $r['name'].'. '.$ex[0].'.');
     return '<div id="show_page">'.
-                ($r['access'] == 0 ? '<div class="noaccess">Внимание, эта страница доступна только администратору. <a href="http://'.DOMAIN.'/admin/page'.$id.'/edit">Редактировать страницу</a></div>' : '').
-                htmlspecialchars_decode($r['txt']).
+                (!$r['access'] ? '<div class="noaccess">Внимание, эта страница доступна только администратору. <a href="http://'.DOMAIN.'/admin/page'.$id.'/edit">Редактировать страницу</a></div>' : '').
+                $txt.
            '</div>';
-}//end of show_page()
+}//show_page()
 
 function go_galery() {
     global $title;
@@ -137,7 +157,7 @@ function go_galery() {
         return 'Такой страницы нет';
     $_GET['id'] = $r['id'];
     return show_galery($r['name']);
-}//end of go_galery()
+}//go_galery()
 
 function show_galery($name) {
     $q = query("SELECT * FROM `galery_catalogs` WHERE `access`=1 AND `image_access`>0 ORDER BY `sort` ASC");
@@ -166,5 +186,5 @@ function show_galery($name) {
             '<h1>'.$name.'</h1>'.
             $spisok.
         '</div>';
-}//end of show_galery()
+}//show_galery()
 

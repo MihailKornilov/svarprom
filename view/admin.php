@@ -26,7 +26,7 @@ function show_admin_page() {
         '</ul>'.
     '</div>';
     return $send;
-}//end of show_admin_page()
+}//show_admin_page()
 
 function show_admin_changepass() {
     return '<div class="head"><a href="'.URL.'/admin">Администрирование</a> » Изменение пароля</div>'.
@@ -38,7 +38,7 @@ function show_admin_changepass() {
             '<tr><td colspan="2" align="center"><span class="error"></span>&nbsp;</td></tr>'.
         '</table>'.
         '<a href="'.URL.'/admin" class="aajax menu_back" val="admin"><< назад</a>';
-}//end of show_admin_changepass()
+}//show_admin_changepass()
 
 function show_admin_logotext() {
     return '<div class="head"><a href="'.URL.'/admin">Администрирование</a> » Изменение текста в шапке</div>'.
@@ -53,7 +53,7 @@ function show_admin_logotext() {
             '<IFRAME name="mce_frame" id="mce_frame"></IFRAME>'.
         '</div>'.
         '<a href="'.URL.'/admin" class="menu_back"><< назад</a>';
-}//end of show_admin_logotext()
+}//show_admin_logotext()
 
 function show_admin_menutop() {
     $q = query("SELECT
@@ -75,7 +75,7 @@ function show_admin_menutop() {
         '</div>'.
         page_name_add('top').
         '<a href="'.URL.'/admin" class="menu_back"><< назад</a>';
-}//end of show_admin_menutop()
+}//show_admin_menutop()
 
 function show_admin_menuleft() {
     $q = query("SELECT
@@ -97,7 +97,7 @@ function show_admin_menuleft() {
         '</div>'.
         page_name_add('left').
         '<a href="'.URL.'/admin" class="menu_back"><< назад</a>';
-}//end of show_admin_menuleft()
+}//show_admin_menuleft()
 
 function page_name_add($place = '') {
     return '<div id="page_name_add">Новый пункт меню: '.
@@ -106,7 +106,7 @@ function page_name_add($place = '') {
         '<button>Добавить</button> '.
         '<span class="error"></span>'.
     '</div>';
-}//end of page_name_add()
+}//page_name_add()
 
 function get_pageitem_for_spisok($p) {
     return '<table class="tab-spisok sort" val="'.$p['id'].'">'.
@@ -114,7 +114,7 @@ function get_pageitem_for_spisok($p) {
             '<td class="access"><input type="checkbox"'.($p['access'] ? 'checked' : '').' class="page_show_check" val="'.$p['id'].'" /></td>'.
         '</tr>'.
     '</table>';
-}//end of get_pageitem_for_spisok()
+}//get_pageitem_for_spisok()
 
 function show_admin_pageedit($id) {
     $q = query("SELECT * FROM `pages` WHERE `id`=".$id);
@@ -181,7 +181,7 @@ function show_admin_pageedit($id) {
         '<a href="'.URL.'/page'.$page['id'].'" class="page_preview_link">перейти на страницу</a>';
 
     return $out;
-}//end of show_admin_pageedit()
+}//show_admin_pageedit()
 
 function show_admin_galery() {
     $send = '<div class="head"><a href="'.URL.'/admin">Администрирование</a> » Управление фотогалереей</div>';
@@ -215,7 +215,7 @@ function show_admin_galery() {
                 '<span class="error"></span>'.
             '</div>'.
         '</div>';
-}//end of show_admin_galery()
+}//show_admin_galery()
 
 function admin_galery_item($item) {
     $cover = $item['cover'] ? '<img src="'.$item['cover'].'">' : '';
@@ -235,7 +235,7 @@ function admin_galery_item($item) {
                 '<td class="access"><input type="checkbox"'.($item['access'] ? 'checked="checked"' : '').' class="check" val="'.$item['id'].'"></td>'.
             '</tr>'.
         '</table>';
-}//end of admin_galery_item()
+}//admin_galery_item()
 
 function admin_galery_edit($id) {
     $q = query("SELECT * FROM `galery_catalogs` WHERE `id`=".$id." LIMIT 1");
@@ -272,7 +272,7 @@ function admin_galery_edit($id) {
     return '<div class="head"><a href="'.URL.'/admin">Администрирование</a> » Редактирование каталога фотогалереи</div>'.
             '<div id="admin_galery_edit">'.$send.'</div>'.
         '<a href="'.URL.'/admin/galery" class="menu_back"><< назад</a>';
-}//end of admin_galery_edit()
+}//admin_galery_edit()
 
 function admin_image_unit($unit) {
     $img = (array)json_decode($unit['img']);
@@ -293,7 +293,7 @@ function admin_image_unit($unit) {
             '<tr>'.
         '</table>'.
     '</div>';
-}//end of admin_image_unit()
+}//admin_image_unit()
 
 function adminGaleryCountAndCoverSet($id) {
     // Общее количество фото в каталоге
@@ -322,4 +322,4 @@ function adminGaleryCountAndCoverSet($id) {
                `image_access`=".$image_access.",
                `cover`='".$cover."'
            WHERE `id`=".$id);
-}//end of adminGaleryCountAndCoverSet()
+}//adminGaleryCountAndCoverSet()
