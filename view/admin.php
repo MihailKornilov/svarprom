@@ -5,6 +5,7 @@ function show_admin_page() {
         case 'textlogo': return show_admin_logotext();
         case 'menutop': return show_admin_menutop();
         case 'menuleft': return show_admin_menuleft();
+        case 'menuall': return show_admin_menuall();
         case 'pageedit':
             if(!preg_match(REGEXP_NUMERIC, @$_GET['id']))
                 return 'Страница не существует';
@@ -22,6 +23,7 @@ function show_admin_page() {
             '<li><a href="'.URL.'/admin/textlogo" class="aajax">Изменить текст в шапке</a>'.
             '<li><a href="'.URL.'/admin/menutop" class="aajax">Управление верхним меню</a>'.
             '<li><a href="'.URL.'/admin/menuleft">Управление левым меню</a>'.
+            '<li><a href="'.URL.'/admin/menuall">Произвольные страницы</a>'.
             '<li><a href="'.URL.'/admin/galery">Фотогалерея</a>'.
         '</ul>'.
     '</div>';
@@ -99,8 +101,31 @@ function show_admin_menuleft() {
         '<a href="'.URL.'/admin" class="menu_back"><< назад</a>';
 }//show_admin_menuleft()
 
-function page_name_add($place = '') {
-    return '<div id="page_name_add">Новый пункт меню: '.
+function show_admin_menuall() {//произвольные страницы
+    $q = query("SELECT
+                    `id`,`name`,`access`
+                FROM `pages`
+                WHERE `place`='all'
+                ORDER BY `sort` ASC");
+    $pages = '';
+    while($r = mysql_fetch_assoc($q))
+        $pages .= get_pageitem_for_spisok($r);
+    return '<div class="head"><a href="'.URL.'/admin">Администрирование</a> » Произвольные страницы</div>'.
+        '<div id="admin_menutop">'.
+            '<table class="tab-spisok">'.
+                '<tr><th class="name">Название</th>'.
+                    '<th class="access">Доступ</th>'.
+                '</tr>'.
+            '</table>'.
+        '<div class="drag" id="menutop_sort">'.$pages.'</div>'.
+        '</div>'.
+        page_name_add('all').
+        '<a href="'.URL.'/admin" class="menu_back"><< назад</a>';
+}//show_admin_menuleft()
+
+function page_name_add($place) {
+    return
+	'<div id="page_name_add">Новый пункт меню: '.
         '<input type="text" id="name" maxlength="50" /> '.
         '<input type="hidden" id="place" value="'.$place.'" /> '.
         '<button>Добавить</button> '.
@@ -162,7 +187,11 @@ function show_admin_pageedit($id) {
             'var link_list = ['.implode(',',$link_list).'];'.
         '</SCRIPT>'.
         '<SCRIPT type="text/javascript" src="/js/tinymce/tinymce.min.js"></SCRIPT>'.
-        '<div class="head"><a href="'.URL.'/admin">Администрирование</a> » Редактирование страницы</div>'.
+        '<div class="head">'.
+	        '<a href="'.URL.'/admin">Администрирование</a> » '.
+	        '<a href="'.URL.'/admin/'.($page['place'] ? 'menu'.$page['place'] : '').'">Список страниц</a> » '.
+	        'Редактирование страницы'.
+	    '</div>'.
         '<div id="admin_pageedit">'.
             '<form method="post" action="'.URL.'/view/include/mceSave.php" target="mce_frame" id="pageedit_form">'.
                 'Название: <input type="text" name="name" value="'.htmlspecialchars_decode($page['name']).'" id="pageedit_name" />'.

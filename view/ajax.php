@@ -92,9 +92,12 @@ switch(@$_POST['p']) {
             break;
         }
         switch(@$_POST['place']) {
-            case 'top': $place = 'top'; break;
-            case 'left': $place = 'left'; break;
-            default: $place = '';
+            case 'top':
+            case 'left':
+            case 'all': $place = $_POST['place']; break;
+            default:
+	            $send['error'] = 1;
+	            break;
         }
         $name = htmlspecialchars($_POST['name'], ENT_QUOTES);
         $q = query("SELECT

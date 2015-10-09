@@ -74,9 +74,32 @@ var imgCatId, // id каталога изображений
                 .height(document_height);
             imageOpen(imagesJson[imgCatId][imgNext - 1]);
         }
-    };
+    },
+	adminLogin = function() {
+		var send = {
+			p:'login',
+			pass:$('#login_pass').val()
+		};
+		if(send.pass.length == 0) return;
+		$.post(URL_AJAX, send, function(res) {
+			if(res.error == 0)
+				location.href = 'http://' + DOMAIN + '/admin';
+			else {
+				showError(res.text);
+				$('#login_pass').focus();
+			}
+		}, 'json');
+	};
 
 $(window).resize(resize);
+
+$.fn.keyEnter = function(func) {
+	$(this).keydown(function(e) {
+		if(e.keyCode == 13)
+			func();
+	});
+	return $(this);
+};
 
 $(document)
 	.on('click', '.aajax', function() {
@@ -91,19 +114,7 @@ $(document)
 		return false;
 	})
 
-	.on('click', '#login', function() {
-		var send = {
-			p:'login',
-			pass:$('#login_pass').val()
-		};
-		if(send.pass.length == 0) return;
-		$.post(URL_AJAX, send, function(res) {
-			if(res.error == 0)
-				location.href = 'http://' + DOMAIN + '/admin';
-			else
-				showError(res.text);
-		}, 'json');
-	})
+	.on('click', '#login', adminLogin)
 	.on('click', '#logout', function() {
 		$.post(URL_AJAX, {p:'logout'}, function(res) {
 			location.href = URL;
@@ -545,7 +556,7 @@ $(document)
 			}
 		});
 
-		if($('#pageedit_txt').length > 0) {
+		if($('#pageedit_txt').length) {
 			tinymce.init({
 				selector: "textarea#pageedit_txt",
 				plugins: [
@@ -566,7 +577,7 @@ $(document)
 				link_list:link_list
 			});
 		}
-		if($('#logotext_edit').length > 0) {
+		if($('#logotext_edit').length) {
 			tinymce.init({
 				width:390,
 				selector: "textarea#logotext_edit",
@@ -579,6 +590,10 @@ $(document)
 				content_css:"/css/logotext.css?" + VERSION
 			});
 		}
+		if($('.login_head').length)
+			$('#login_pass')
+				.focus()
+				.keyEnter(adminLogin);
 
 		resize();
 	});
